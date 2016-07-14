@@ -57,7 +57,7 @@ def columnSelect(rawcol,l):
                 a2 = int(e1[1])
             except ValueError:
                 a2 = l
-            for f in xrange(a1,a2+1):
+            for f in range(a1,a2+1):
                 temp.append(f-1)
     return temp
 
