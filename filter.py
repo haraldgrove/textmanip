@@ -73,9 +73,9 @@ def filterFile(opt):
             elif opt.skip:
                 if l[col] not in skip: fout.write(line)
             elif opt.less:
-                if float(l[col]) < float(opt.less): fout.write(line)
+                if float(l[col].strip('%')) < float(opt.less): fout.write(line)
             elif opt.more:
-                if float(l[col]) > float(opt.more): fout.write(line)
+                if float(l[col].strip('%')) > float(opt.more): fout.write(line)
             elif opt.unique:
                 if l[col] not in seen:
                     fout.write(line)

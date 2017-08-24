@@ -5,7 +5,6 @@
 # from __future__ import division, print_function
 import sys
 import argparse
-import numpy as np
 import time
 
 def makeSummary(args):
