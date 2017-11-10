@@ -28,6 +28,8 @@ def joinfiles(opt):
             try:
                 if l[opt.column1-1] in db:
                     fout.write('{}\t{}\n'.format(line.strip(),f2[db[l[opt.column1-1]]].strip()))
+                else:
+                    fout.write('{}\n'.format(line.strip()))
             except IndexError:
                 continue
     if opt.outfile is not None:
@@ -44,7 +46,8 @@ if __name__ == "__main__":
     parser.add_argument("-o", dest="outfile", help="output file")
     parser.add_argument('-v', '--verbose', action="store_true", help='Prints runtime info')
     parser.add_argument("-c", dest="column1", type=int, help="Column in first file ", default=1)
-    parser.add_argument("-b", dest="column2", type=int, help="Columen in second file", default=1)
+    parser.add_argument("-b", dest="column2", type=int, help="Column in second file", default=1)
+    parser.add_argument("-k", dest="keep", action="store_true", help="Output non-matching lines from first file")
     parser.add_argument("-t", dest="sep", action="store_true", help="Tab separated columns")
     args = parser.parse_args()
     main(args)

@@ -19,39 +19,50 @@ def filterFile(opt):
     """
     equal,skip = {},{}
     col = int(opt.column) - 1
-    if opt.columnB: colB = int(opt.columnB) - 1
-    else: colB = None
+    if opt.columnB:
+        colB = int(opt.columnB) - 1
+    else:
+        colB = None
     if opt.infile[-3:] == '.gz':
         fin = gzip.open(opt.infile,'r')
     else:
         fin = open(opt.infile,'r')
     # Reads in and records filtervalues
     if opt.equal and os.path.isfile(opt.equal):
-        if opt.equal[-3:] == '.gz': feq = gzip.open(opt.equal,'r')
-        else: feq = open(opt.equal,'r')
+        if opt.equal[-3:] == '.gz':
+            feq = gzip.open(opt.equal,'r')
+        else:
+            feq = open(opt.equal,'r')
         for line in feq:
             try:
                 if opt.columnB: equal[line.strip().split()[colB]] = 1
                 else: equal[line.strip()] = 1
             except IndexError:
                 continue
-    else: equal[opt.equal] = 1
+    else:
+        equal[opt.equal] = 1
     if opt.skip and os.path.isfile(opt.skip):
         for line in open(opt.skip,'r'):
             try:
-                if opt.columnB: skip[line.strip().split()[colB]] = 1
-                else: skip[line.strip()] = 1
+                if opt.columnB:
+                    skip[line.strip().split()[colB]] = 1
+                else:
+                    skip[line.strip()] = 1
             except IndexError:
                 continue
-    else: skip[opt.skip] = 1
+    else:
+        skip[opt.skip] = 1
     if opt.verbose:
         sys.stderr.write('Read %d filter criteria\n' % (len(equal)+len(skip)))
         for i,n in enumerate(equal):
             sys.stderr.write('%d, %s\n' % (i,n))
-            if i > 5: break
+            if i > 5:
+                break
     # Reads through target file and outputs according to template
-    if not opt.outfile: fout = sys.stdout
-    else: fout = open(opt.outfile,'w')
+    if not opt.outfile:
+        fout = sys.stdout
+    else:
+        fout = open(opt.outfile,'w')
     if opt.unique:
         seen = {}
     firstline = True
@@ -63,19 +74,25 @@ def filterFile(opt):
             fout.write(line)
             firstline = False
             continue
-        if opt.tab: l = line.strip().split('\t')
+        if opt.tab:
+            l = line.strip().split('\t')
         else: l = line.strip().split()
-        if len(l) == 0: continue
+        if len(l) == 0:
+            continue
         #print opt.equal,opt.skip,l[col]
         try:
             if opt.equal:
-                if l[col] in equal: fout.write(line)
+                if l[col] in equal:
+                    fout.write(line)
             elif opt.skip:
-                if l[col] not in skip: fout.write(line)
+                if l[col] not in skip:
+                    fout.write(line)
             elif opt.less:
-                if float(l[col].strip('%')) < float(opt.less): fout.write(line)
+                if float(l[col].strip('%')) < float(opt.less):
+                    fout.write(line)
             elif opt.more:
-                if float(l[col].strip('%')) > float(opt.more): fout.write(line)
+                if float(l[col].strip('%')) > float(opt.more):
+                    fout.write(line)
             elif opt.unique:
                 if l[col] not in seen:
                     fout.write(line)
@@ -84,7 +101,8 @@ def filterFile(opt):
             fout.write(line)
             continue
     fin.close()
-    if opt.outfile: fout.close()
+    if opt.outfile:
+        fout.close()
 
 def main():
     parser = argparse.ArgumentParser(description='Processes genotypes.')
@@ -101,7 +119,8 @@ def main():
     parser.add_argument("-s",dest="skip",help="Skip lines matching this")
     parser.add_argument("-t",dest="tab",action="store_true",help="Tab separated columns")
     args = parser.parse_args()
-    if args.equal or args.skip or args.less or args.more or args.unique: filterFile(args)
+    if args.equal or args.skip or args.less or args.more or args.unique:
+        filterFile(args)
     else:
         print("No filtering argument, aborting...")
 
