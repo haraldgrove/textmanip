@@ -27,7 +27,7 @@ def joinfiles(opt):
             l = line.strip().split()
             try:
                 if l[opt.column1-1] in db:
-                    fout.write('{}\t{}\n'.format(line.strip(),f2[db[l[opt.column2-1]]].strip()))
+                    fout.write('{}\t{}\n'.format(line.strip(),f2[db[l[opt.column1-1]]].strip()))
             except IndexError:
                 continue
     if opt.outfile is not None:
