@@ -74,9 +74,7 @@ def filterFile(opt):
             fout.write(line)
             firstline = False
             continue
-        if opt.tab:
-            l = line.strip().split('\t')
-        else: l = line.strip().split()
+        l = line.strip().split(opt.sep)
         if len(l) == 0:
             continue
         #print opt.equal,opt.skip,l[col]
@@ -117,7 +115,7 @@ def main():
     parser.add_argument("-l", dest="less",help="Keep lines with values less than this")
     parser.add_argument("-m", dest="more",help="Keep lines with value more than this")
     parser.add_argument("-s",dest="skip",help="Skip lines matching this")
-    parser.add_argument("-t",dest="tab",action="store_true",help="Tab separated columns")
+    parser.add_argument("-t",dest="sep",help="Column separator")
     args = parser.parse_args()
     if args.equal or args.skip or args.less or args.more or args.unique:
         filterFile(args)
