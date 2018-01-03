@@ -73,6 +73,11 @@ def split_highest(args):
                 fout2.write(line)
 
 def split_limit(args):
+    """
+    Splits the file based on a given value in a given columns
+    :param args:
+    :return:
+    """
     try:
         c = int(args.column)-1
     except ValueError:
@@ -94,6 +99,34 @@ def split_limit(args):
             else:
                 fout2.write(line)
 
+def split_bins(args):
+    """
+    Splits the file into a number given bins
+    :param args:
+    :return:
+    """
+    import math
+    count = 0
+    with open(args.infile, 'r') as fin:
+        for index, line in enumerate(fin):
+            count += 1
+    b = args.limit
+    parts = math.floor(count/b)
+    temp = args.infile.rsplit('.', 1)
+    c = 0
+    with open(args.infile, 'r') as fin:
+        for index, line in enumerate(fin):
+            if (index) % parts == 0 and c < b:
+                try:
+                    fout.close()
+                except:
+                    pass
+                fout = open('{}.part{}.{}'.format(temp[0], c, temp[1]), 'w')
+                c += 1
+            fout.write(line)
+    fout.close()
+
+
 def main(args):
     """ Main entry point of the app """
     if args.command == 'unique':
@@ -102,6 +135,8 @@ def main(args):
         split_highest(args)
     elif args.command == 'limit':
         split_limit(args)
+    elif args.command == 'bins':
+        split_bins(args)
     if args.log:
         with open('README.txt', 'a') as fout:
             fout.write('[{}]\t[{}]\n'.format(time.asctime(), ' '.join(sys.argv)))
@@ -111,7 +146,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # Required positional argument
-    parser.add_argument("command", help="Command (unqiue/high/limit)")
+    parser.add_argument("command", help="Command (unqiue/high/limit/bins)")
     parser.add_argument("infile", help="Input file")
 
     # Optional argument flag which defaults to False
@@ -121,7 +156,7 @@ if __name__ == "__main__":
     # Optional argument which requires a parameter (eg. -d test)
     parser.add_argument("-c", "--column", help="Column(s) to evaluate", default='1')
     parser.add_argument("-d", "--delim", help="Delimiter", default='\t')
-    parser.add_argument("-i", "--limit", type=float, help="With limit, split above and below this value", default=0)
+    parser.add_argument("-i", "--limit", type=float, help="Limit: Bins:", default=0)
 
     # Optional verbosity counter (eg. -v, -vv, -vvv, etc.)
     parser.add_argument(
