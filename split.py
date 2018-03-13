@@ -72,6 +72,32 @@ def split_highest(args):
             else:
                 fout2.write(line)
 
+def split_dist(args):
+    """
+    Splits the input file into a number of new files, each with a unique value for the given column
+    :param args:
+    :return:
+    """
+    try:
+        c = int(args.column)-1
+    except ValueError:
+        sys.stderr.write('This option require a single column\n')
+        sys.exit(1)
+    outfiles = {}
+    temp = args.infile.rsplit('.',1)
+    outfile1 = '_unique.'.join(temp)
+    with open(args.infile, 'r') as fin:
+        for line in fin:
+            l = line.strip().split(args.delim)
+            val = l[c]
+            if val not in outfiles:
+                sep = '.{}.'.format(val)
+                outfiles[val] = open(sep.join(temp), 'w')
+            outfiles[val].write(line)
+    for fout in outfiles.values():
+        fout.close()
+
+
 def split_limit(args):
     """
     Splits the file based on a given value in a given columns
@@ -133,9 +159,14 @@ def main(args):
         split_unique(args)
     elif args.command == 'high':
         split_highest(args)
+    elif args.command == 'dist':
+        split_dist(args)
     elif args.command == 'limit':
         split_limit(args)
     elif args.command == 'bins':
+        if args.limit == 0:
+            sys.stderr.write('This option requires --limit to also be set.\n')
+            return
         split_bins(args)
     if args.log:
         with open('README.txt', 'a') as fout:
