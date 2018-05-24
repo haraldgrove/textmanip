@@ -19,30 +19,32 @@ def match(m, l):
             return False
     return True
 
+
 def extractlines(args):
     db = []
-    with open(args.equal, 'r') as fin:
+    with open(args.equal, "r") as fin:
         for line in fin:
             l = line.strip().split()
             db.append(l)
-    with open(args.infile, 'r') as fin, open(args.outfile, 'w') as fout:
+    with open(args.infile, "r") as fin, open(args.outfile, "w") as fout:
         if args.header:
             fout.write(next(fin))
         for line in fin:
             l = line.strip().split()
             for el in db:
-                if match(el,l):
-                    #print(el,l)
+                if match(el, l):
+                    # print(el,l)
                     fout.write(line)
                     break
 
+
 def filterlines(args):
     db = []
-    with open(args.skip, 'r') as fin:
+    with open(args.skip, "r") as fin:
         for line in fin:
             l = line.strip().split()
             db.append(l)
-    with open(args.infile, 'r') as fin, open(args.outfile, 'w') as fout:
+    with open(args.infile, "r") as fin, open(args.outfile, "w") as fout:
         if args.header:
             fout.write(next(fin))
         for line in fin:
@@ -53,19 +55,21 @@ def filterlines(args):
             except ValueError:
                 pass
             for el in db:
-                if match(el,l):
+                if match(el, l):
                     break
             else:
                 fout.write(line)
 
+
 def randselect(args):
     db = []
-    with open(args.infile, 'r') as fin, open(args.outfile, 'w') as fout:
+    with open(args.infile, "r") as fin, open(args.outfile, "w") as fout:
         if args.header:
             fout.write(next(fin))
         for line in fin:
             if random.random() < args.rand:
                 fout.write(line)
+
 
 def main(args):
     """ Main entry point of the app """
@@ -76,8 +80,8 @@ def main(args):
     elif args.rand is not None:
         randselect(args)
     if args.log:
-        with open('README.txt', 'a') as fout:
-            fout.write('[{}]\t[{}]\n'.format(time.asctime(), ' '.join(sys.argv)))
+        with open("README.txt", "a") as fout:
+            fout.write("[{}]\t[{}]\n".format(time.asctime(), " ".join(sys.argv)))
 
 
 if __name__ == "__main__":
@@ -88,28 +92,40 @@ if __name__ == "__main__":
     parser.add_argument("infile", help="Input file")
 
     # Optional argument flag which defaults to False
-    parser.add_argument('-l', '--log', action="store_true", default=False, help="Save command to 'README.txt'")
-    parser.add_argument('-k', '--header', action="store_true", default=False, help="Preserve first line as header")
+    parser.add_argument(
+        "-l",
+        "--log",
+        action="store_true",
+        default=False,
+        help="Save command to 'README.txt'",
+    )
+    parser.add_argument(
+        "-k",
+        "--header",
+        action="store_true",
+        default=False,
+        help="Preserve first line as header",
+    )
 
     # Optional argument which requires a parameter (eg. -d test)
     parser.add_argument("-e", "--equal", help="Values to keep")
     parser.add_argument("-f", "--skip", help="Values to filter")
     parser.add_argument("-o", "--outfile", help="Outfile")
-    parser.add_argument("-r", "--rand", type=float, help="Proportion of lines to randomly keep [0 - 1]")
+    parser.add_argument(
+        "-r", "--rand", type=float, help="Proportion of lines to randomly keep [0 - 1]"
+    )
 
     # Optional verbosity counter (eg. -v, -vv, -vvv, etc.)
     parser.add_argument(
-        '-v',
-        '--verbose',
-        action='count',
-        default=0,
-        help="Verbosity (-v, -vv, etc)")
+        "-v", "--verbose", action="count", default=0, help="Verbosity (-v, -vv, etc)"
+    )
 
     # Specify output of '--version'
     parser.add_argument(
-        '--version',
-        action='version',
-        version='%(prog)s (version {version})'.format(version=__version__))
+        "--version",
+        action="version",
+        version="%(prog)s (version {version})".format(version=__version__),
+    )
 
     args = parser.parse_args()
     main(args)
