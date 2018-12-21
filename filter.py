@@ -92,7 +92,7 @@ def main():
     parser = argparse.ArgumentParser(description="Keep or exclude lines.")
     parser.add_argument("-i", "--infile", help="input file")
     parser.add_argument("-o", "--outfile", help="output file")
-    parser.add_argument("-c", "--column", help="Column to filter on", default=1)
+    parser.add_argument("-c", "--column", type=int, help="Column to filter on", default=1)
     parser.add_argument("-b", "--columnB", help="Columen with filter values", default=1)
     parser.add_argument("-k", "--header", action="store_true", help="Keep header line")
     parser.add_argument("-u", "--unique", action="store_true", 
