@@ -20,7 +20,10 @@ def countFile(opt):
         for line in fin:
             if line.startswith("#"):
                 continue
-            line_l = line.strip().split("\t")
+            if opt.whitespace:
+                line_l = line.strip().split()
+            else:
+                line_l = line.strip().split("\t")
             record = []
             for c in cols:
                 record.append(line_l[c])
@@ -41,6 +44,7 @@ def main():
     parser.add_argument("infile", help="input file")
     parser.add_argument("-o", dest="outfile", help="output file")
     parser.add_argument("-c", dest="column", help="column selection", default="1")
+    parser.add_argument("-w", dest="whitespace", action="store_true", help="Split on whitespace", default=False)
     parser.add_argument(
         "-v",
         dest="verbose",
