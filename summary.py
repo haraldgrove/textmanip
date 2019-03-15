@@ -13,9 +13,15 @@ def makeSummary(args):
         lc = 0
         cc = {}
         firstline = None
+        if args.separator == 'w':
+            sep = None
+        elif args.separator == 't':
+            sep = '\t'
+        else:
+            sep = args.separator
         for line in fin:
             # if args.comment and line.startswith(args.comment): continue
-            l = line.strip().split()
+            l = line.strip().split(sep)
             cc[len(l)] = cc.get(len(l), 0) + 1
             if not firstline:
                 firstline = l
@@ -67,6 +73,7 @@ def columnSelect(rawcol, l):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("infile")
+    parser.add_argument("-s", dest="separator", help="Columnseparator: (w)hitespace, (t)ab", default='t')
     parser.add_argument(
         "-r", dest="raw", action="store_true", help="Prints rawdata", default=False
     )

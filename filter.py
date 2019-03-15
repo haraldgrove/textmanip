@@ -52,6 +52,10 @@ def filterFile(args):
     if args.unique:
         db = {}
     firstline = True
+    if args.tab:
+        sep = '\t'
+    else:
+        sep = args.sep
     for line in fin:
         if line.startswith("#"):
             fout.write(line)
@@ -60,7 +64,7 @@ def filterFile(args):
             fout.write(line)
             firstline = False
             continue
-        l = line.strip().split(args.sep)
+        l = line.strip().split(sep)
         if len(l) == 0:
             continue
         try:
@@ -93,7 +97,7 @@ def main():
     parser.add_argument("-i", "--infile", help="input file")
     parser.add_argument("-o", "--outfile", help="output file")
     parser.add_argument("-c", "--column", type=int, help="Column to filter on", default=1)
-    parser.add_argument("-b", "--columnB", help="Columen with filter values", default=1)
+    parser.add_argument("-b", "--columnB", type=int, help="Columen with filter values", default=1)
     parser.add_argument("-k", "--header", action="store_true", help="Keep header line")
     parser.add_argument("-u", "--unique", action="store_true", 
                         help="Remove lines with duplicated values in selected column")
@@ -102,6 +106,7 @@ def main():
     parser.add_argument("-m", "--more", help="Keep lines with value more or equal to this")
     parser.add_argument("-s", "--skip", help="Skip lines matching this")
     parser.add_argument("-t", "--sep", help="Column separator")
+    parser.add_argument("--tab", action="store_true", help="Use Tab as column separator", default = False)
     args = parser.parse_args()
     if args.equal or args.skip or args.less or args.more or args.unique:
         filterFile(args)
