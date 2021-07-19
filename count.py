@@ -19,7 +19,7 @@ def countFile(opt):
         for line in fin:
             if line.startswith('#'):
                 continue
-            line_l = line.strip().split('\t')
+            line_l = line.strip().split()
             record = []
             for c in cols:
                 record.append(line_l[c])
