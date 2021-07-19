@@ -19,10 +19,12 @@ def makeSummary(args):
             sep = '\t'
         else:
             sep = args.separator
-        for line in fin:
+        for index, line in enumerate(fin):
             # if args.comment and line.startswith(args.comment): continue
             l = line.strip().split(sep)
-            cc[len(l)] = cc.get(len(l), 0) + 1
+            if len(l) not in cc:
+                cc[len(l)] = []
+            cc[len(l)].append(index)
             if not firstline:
                 firstline = l
                 colInd = columnSelect(args.columns, len(l))
@@ -43,10 +45,13 @@ def makeSummary(args):
             if lc == args.lines and (args.raw or args.info):
                 break
     if not (args.raw or args.info):
-        sys.stdout.write("%d lines" % (lc))
+        sys.stdout.write("{} lines\n".format(lc))
         for key in cc:
-            sys.stdout.write(", %dx%d" % (cc[key], key))
-        sys.stdout.write(" columns\n")
+            if len(cc[key]) < 10:
+                seq = ','.join([str(i+1) for i in cc[key]])
+            else:
+                seq = ','.join([str(cc[key][i]+1) for i in range(0,5)]) + ' and {} more.'.format(len(cc[key]) - 5)
+            sys.stdout.write("\t{}\t{}\n".format(key, seq))
 
 
 def columnSelect(rawcol, l):
