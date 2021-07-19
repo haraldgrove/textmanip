@@ -8,20 +8,21 @@ from collections import ChainMap
 Nrows = 5
 Ncols = 5
 
-cellre = re.compile(r'\b[A-Z][0-9]\b')
+cellre = re.compile(r"\b[A-Z][0-9]\b")
 
 
 def cellname(i, j):
     return f'{chr(ord("A")+j)}{i+1}'
 
 
-class Cell():
+class Cell:
+
     def __init__(self, i, j, siblings, parent):
         self.row = i
         self.col = j
         self.siblings = siblings
         self.name = cellname(i, j)
-        self.formula = '0'
+        self.formula = "0"
         self.value = 0
         # Dependencies - must be updated if this cell changes
         self.deps = set()
@@ -29,16 +30,14 @@ class Cell():
         self.reqs = set()
 
         self.var = tk.StringVar()
-        entry = self.widget = tk.Entry(parent,
-                                       textvariable=self.var,
-                                       justify='right')
-        entry.bind('<FocusIn>', self.edit)
-        entry.bind('<FocusOut>', self.update)
-        entry.bind('<Return>', self.update)
-        entry.bind('<Up>', self.move(-1, 0))
-        entry.bind('<Down>', self.move(+1, 0))
-        entry.bind('<Left>', self.move(0, -1))
-        entry.bind('<Right>', self.move(0, 1))
+        entry = self.widget = tk.Entry(parent, textvariable=self.var, justify="right")
+        entry.bind("<FocusIn>", self.edit)
+        entry.bind("<FocusOut>", self.update)
+        entry.bind("<Return>", self.update)
+        entry.bind("<Up>", self.move(-1, 0))
+        entry.bind("<Down>", self.move(+1, 0))
+        entry.bind("<Left>", self.move(0, -1))
+        entry.bind("<Right>", self.move(0, 1))
 
         self.var.set(self.value)
 
@@ -86,11 +85,12 @@ class Cell():
         self.calculate()
         self.propagate()
         # If this was after pressing Return, keep showing the formula
-        if hasattr(event, 'keysym') and event.keysym == "Return":
+        if hasattr(event, "keysym") and event.keysym == "Return":
             self.var.set(self.formula)
 
 
 class SpreadSheet(tk.Frame):
+
     def __init__(self, rows, cols, master=None):
         super().__init__(master)
         self.rows = rows
@@ -103,23 +103,23 @@ class SpreadSheet(tk.Frame):
     def create_widgets(self):
         # Frame for all the cells
         self.cellframe = tk.Frame(self)
-        self.cellframe.pack(side='top')
+        self.cellframe.pack(side="top")
 
         # Column labels
         blank = tk.Label(self.cellframe)
         blank.grid(row=0, column=0)
         for j in range(self.cols):
-            label = tk.Label(self.cellframe, text=chr(ord('A')+j))
-            label.grid(row=0, column=j+1)
+            label = tk.Label(self.cellframe, text=chr(ord("A") + j))
+            label.grid(row=0, column=j + 1)
 
         # Fill in the rows
         for i in range(self.rows):
             rowlabel = tk.Label(self.cellframe, text=str(i + 1))
-            rowlabel.grid(row=1+i, column=0)
+            rowlabel.grid(row=1 + i, column=0)
             for j in range(self.cols):
                 cell = Cell(i, j, self.cells, self.cellframe)
                 self.cells[cell.name] = cell
-                cell.widget.grid(row=1+i, column=1+j)
+                cell.widget.grid(row=1 + i, column=1 + j)
 
 
 root = tk.Tk()
